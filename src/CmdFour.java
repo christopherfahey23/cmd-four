@@ -5,7 +5,7 @@ public class CmdFour {
 
     private static boolean quit; 
     public static void main(String[] args) throws Exception {
-        board = new Board();
+        board = new Board(System.out);
         quit = false;
         readInput();
     }
@@ -22,10 +22,7 @@ public class CmdFour {
                 try {
                     int move = Integer.parseInt(cmd);
                     if (move >= 1 && move <= 7) {
-                        // TODO: call method in Board
-                        // board.takeTurn(move);
-                        
-                        System.out.println("Row " + move);
+                        board.takeTurn(move);
                     } else {
                         throw new RuntimeException();
                     }

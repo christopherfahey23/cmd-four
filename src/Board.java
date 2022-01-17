@@ -5,14 +5,33 @@ public class Board {
     private static final int COLS = 7;
 
     private Piece[][] board = new Piece[ROWS][COLS];
+    private PrintStream s;
 
-    public Board() {
-        
+    public Board(PrintStream s) {
+        this.s = s;
     }
 
-    public void print(PrintStream s) {
-        s.println("Hello");
+    public void takeTurn(int move) {
+        boolean pieceFound = false;
+        int i = 0;
 
+        while (!pieceFound && i < 6) {
+            if (board[i][move] != null) pieceFound = true;
+            else i++;
+        }
+
+        if (i == 0) s.println("Invalid move (column occupied). Please try again.");
+        else {
+            s.println("User places piece in column " + move + ".");
+            board[i - 1][move] = new Piece(Player.USER);
+            print();
+        }
+
+        // TODO: computer response
+        // computerMove();
+    }
+
+    public void print() {
         // top of board
         for (int c = 0; c < COLS; c++) {
             if (c == 0) s.print("┏");
