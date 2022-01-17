@@ -22,13 +22,14 @@ public class Board {
 
         if (i == 0) s.println("Invalid move (column occupied). Please try again.");
         else {
-            s.println("User places piece in column " + move + ".");
+            s.println("User places piece in column " + (move + 1) + ".");
             board[i - 1][move] = new Piece(Player.USER);
+            
+            // TODO: computer response
+            // Check if there's a win - if so, send info back to CmdFour
+            
             print();
         }
-
-        // TODO: computer response
-        // computerMove();
     }
 
     public void print() {
@@ -45,10 +46,11 @@ public class Board {
         for (int r = 0; r < ROWS; r++) {
             // middle of boxes
             for (int c = 0; c < COLS; c++) {
-                s.print("┃   ");
-
+                String box = board[r][c] == null ? " " : board[r][c].print(); 
                 
-                // TODO: print pieces
+                s.print("┃ ");
+                s.print(box);
+                s.print(" ");
             }
             s.println("┃");
             

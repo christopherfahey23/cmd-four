@@ -22,7 +22,7 @@ public class CmdFour {
                 try {
                     int move = Integer.parseInt(cmd);
                     if (move >= 1 && move <= 7) {
-                        board.takeTurn(move);
+                        board.takeTurn(move - 1);
                     } else {
                         throw new RuntimeException();
                     }

@@ -5,6 +5,8 @@ public class Piece {
         this.player = player;
     }
 
+    public Player getPlayer() { return this.player; }
+
     public String print() {
         if (player == Player.USER) return "●";
         else return "◯";
