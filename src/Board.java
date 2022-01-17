@@ -7,57 +7,56 @@ public class Board {
     private Piece[][] board = new Piece[ROWS][COLS];
 
     public Board() {
-
+        
     }
 
     public void print(PrintStream s) {
         s.println("Hello");
 
-        for (int r = 0; r < ROWS; r++) {
-            // top of box
-            for (int c = 0; c < COLS; c++) {
-                // top row
-                if (r == 0) {
-                    // upper left vs. center
-                    if (c == 0) s.print("┌");
-                    else s.print("┬");
-
-                    s.print("───");
-                    
-                    // upper right
-                    if (c == COLS - 1) s.print("┐");
-                }
-                else {
-                    // left edge
-                    if (c == 0) s.print("├");
-                    else s.print("┼");
-
-                    s.print("───");
-
-                    // right edge
-                    if (c == COLS - 1) s.print("┤");
-                }
-            }
-            s.println();
-
-            // middle of box
-            for (int c = 0; c < COLS; c++) {
-                s.print("│   ");
-            }
-            s.println("│");
-        }
-        // bottom of board
+        // top of board
         for (int c = 0; c < COLS; c++) {
-            if (c == 0) s.print("└");
-            else s.print("┴");
+            if (c == 0) s.print("┏");
+            else s.print("┳");
 
             s.print("───");
         }
-        s.println("┘");
+        s.println("┓"); 
 
+        // boxes
+        for (int r = 0; r < ROWS; r++) {
+            // middle of boxes
+            for (int c = 0; c < COLS; c++) {
+                s.print("┃   ");
+
+                
+                // TODO: print pieces
+            }
+            s.println("┃");
+            
+            // bottom of boxes/board
+            for (int c = 0; c < COLS; c++) {
+                if (c == 0) {
+                    if (r == ROWS - 1) s.print("┗");
+                    else s.print("┠");
+                } else {
+                    if (r == ROWS - 1) s.print("┻");
+                    else s.print("╂");
+                }
+                if (r == ROWS - 1) s.print("━━━");
+                else s.print("───");
+                
+                if (c == COLS - 1) {
+                    if (r == ROWS - 1) s.print("┛");
+                    else s.print("┨");
+                }
+            }
+            s.println();
+        }
+        
+        // column labels
         for (int c = 0; c < COLS; c++) {
             s.print("  " + Integer.toString(c + 1) + " ");
         }
-        
+        s.println();
     }
 }

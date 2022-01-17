@@ -1,7 +1,13 @@
 public class Piece {
-    private Color color;
+    private Player player;
 
-    public Piece (Color color) {
-        this.color = color;
+    public Piece (Player player) {
+        this.player = player;
+    }
+
+    public String print() {
+        if (player == Player.USER) return "●";
+        else return "◯";
+        
     }
 }
