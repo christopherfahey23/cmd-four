@@ -101,12 +101,12 @@ public class Game {
     public void print() {
         // top of board
         for (int c = 0; c < COLS; c++) {
-            if (c == 0) outStream.print("┏");
-            else outStream.print("┳");
+            if (c == 0) outStream.print("╔");
+            else outStream.print("╦");
 
             outStream.print("───");
         }
-        outStream.println("┓"); 
+        outStream.println("╗"); 
 
         // boxes
         for (int r = 0; r < ROWS; r++) {
@@ -114,27 +114,27 @@ public class Game {
             for (int c = 0; c < COLS; c++) {
                 String box = board[r][c] == null ? " " : board[r][c].print(); 
                 
-                outStream.print("┃ ");
+                outStream.print("║ ");
                 outStream.print(box);
                 outStream.print(" ");
             }
-            outStream.println("┃");
+            outStream.println("║");
             
             // bottom of boxes/board
             for (int c = 0; c < COLS; c++) {
                 if (c == 0) {
-                    if (r == ROWS - 1) outStream.print("┗");
-                    else outStream.print("┠");
+                    if (r == ROWS - 1) outStream.print("╚");
+                    else outStream.print("╟");
                 } else {
-                    if (r == ROWS - 1) outStream.print("┻");
-                    else outStream.print("╂");
+                    if (r == ROWS - 1) outStream.print("╩");
+                    else outStream.print("╫");
                 }
-                if (r == ROWS - 1) outStream.print("━━━");
+                if (r == ROWS - 1) outStream.print("═══");
                 else outStream.print("───");
                 
                 if (c == COLS - 1) {
-                    if (r == ROWS - 1) outStream.print("┛");
-                    else outStream.print("┨");
+                    if (r == ROWS - 1) outStream.print("╝");
+                    else outStream.print("╢");
                 }
             }
             outStream.println();
