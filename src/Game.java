@@ -10,6 +10,7 @@ public class Game {
     
     private PrintStream outStream;
     private InputStream inStream;
+    private Scanner userInput;
 
     private boolean gameOver;
     private boolean userToPlay;
@@ -19,6 +20,7 @@ public class Game {
         this.inStream = inStream;
     }
 
+    // useless?
     public void start() {
         gameOver = false;
         userToPlay = true;
@@ -27,22 +29,22 @@ public class Game {
     }
 
     private void handleTurn() {
-        Scanner userInput = new Scanner(inStream);
+        userInput = new Scanner(inStream);
 
         while (!gameOver) {
             if (userToPlay == true) {
-                userTakesTurn(userInput);
+                Position pos = userTakesTurn();
                 userToPlay = false;
-                // here for now
-                if (!gameOver) print();
+
+                gameOver = checkWin(Player.USER, pos.getRow(), pos.getCol());
             } else {
-                computerTakesTurn();
+                Position pos = computerTakesTurn();
                 userToPlay = true;
 
-                if (!gameOver) print();
+                gameOver = checkWin(Player.COMPUTER, pos.getRow(), pos.getCol());
             }
-            // check for win
-            // if (!gameOver)
+            print();
+            // TODO: check for draw. Ensure no turn is taken when board is full.
         }
         // TODO: if gameOver, print gameover screen with final board 
         if (gameOver) outStream.println("Thanks for playing!");
@@ -50,47 +52,54 @@ public class Game {
         userInput.close();
     }
 
-    private void userTakesTurn(Scanner userInput) {    
+    // Waits for a valid move from user input (an integer from 1 to 7, inclusive). 
+    // Returns row piece is placed into and (-1, -1) otherwise.
+    private Position userTakesTurn() {    
         boolean validInput = false;
+        int row = -1;
+        int col = -1;
 
         while (!validInput) {
             String cmd = userInput.nextLine();
 
-            if (cmd.equals("quit")) {
-                validInput = true; 
-                gameOver = true;
-            } else {
-                try {
-                    int col = Integer.parseInt(cmd);
-                    if (col >= 1 && col <= 7) {
-                        if (dropPiece(col - 1, Player.USER)) {
-                            validInput = true;
-                            outStream.println(
-                                "User places piece in column " 
-                                + col + ".");
-                        } else {
-                            outStream.println(
-                                "Invalid move. Please try again.");
-                        }
+            try {
+                col = Integer.parseInt(cmd);
+                if (col >= 1 && col <= 7) {
+                    row = dropPiece(col - 1, Player.USER);
+
+                    if (row == -1) {
+                        outStream.println("Invalid move. Please try again.");
                     } else {
-                        throw new RuntimeException();
+                        validInput = true;
+                        outStream.println("User places piece in column " 
+                            + col + ".");
                     }
-                } catch(Exception e) {
-                    outStream.println("Invalid input. Please try again.");
+                } else {
+                    throw new RuntimeException();
                 }
+            } catch(Exception e) {
+                outStream.println("Invalid input. Please try again.");
             }
         }
+
+        return new Position(row, col);
     }
 
-
-    private void computerTakesTurn() {
+    // Generates computer's move and returns as Position.
+    private Position computerTakesTurn() {
         //temporary random move generator
-        int randCol = (int) ((Math.random() * 6) + 1);
+        int randCol = (int) (Math.random() * 6);
         System.out.println("Computer dropping piece in col " + randCol);
-        if(!dropPiece(randCol - 1, Player.COMPUTER)) computerTakesTurn();
+
+        int row = dropPiece(randCol, Player.COMPUTER);
+
+        if(row == -1) return computerTakesTurn();
+        else return new Position(row, randCol);
     }
 
-    private boolean dropPiece(int col, Player player) {
+    // Attempts to drop piece belonging to player in column col. 
+    // Returns -1 if move is invalid and the row the piece lands in otherwise.
+    private int dropPiece(int col, Player player) {
         boolean pieceFound = false;
         int i = 0;
 
@@ -99,14 +108,69 @@ public class Game {
             else i++;
         }
 
-        if (i == 0) return false;
+        if (i == 0) return -1;
         else {
             board[i - 1][col] = new Piece(player);
-            return true;
+            return i - 1;
         }
     }
 
-    public void print() {
+    // Checks if player has won after placing piece in row and col
+    private boolean checkWin(Player player, int row, int col) {
+        return (checkColWin(player, row, col) || checkRowWin(player, row, col));
+    }
+
+    // Checks if player has won by making a column of four in col 
+    private boolean checkColWin(Player player, int row, int col) {
+        boolean win = false;
+
+        int start = row - 3 >= 0 ? row - 3 : 0; 
+        while (!win && start <= ROWS - 3) {
+            
+            boolean winPossible = true; 
+            int i = 0;
+
+            while (winPossible && i < 4) {
+                Piece curr = board[start + i][col];
+
+                if (curr == null || curr.getPlayer() != player) winPossible = false;
+                else if (i == 3) win = true;
+                
+                i++;
+            }
+
+            start++;
+        }
+
+        return win;
+    }
+
+    // Checks if player has won by making a row of four in row 
+    private boolean checkRowWin(Player player, int row, int col) {
+        boolean win = false;
+
+        int start = col - 3 >= 0 ? col - 3 : 0; 
+        while (!win && start <= COLS - 3) {
+            
+            boolean winPossible = true; 
+            int i = 0;
+
+            while (winPossible && i < 4) {
+                Piece curr = board[row][start + i];
+
+                if (curr == null || curr.getPlayer() != player) winPossible = false;
+                else if (i == 3) win = true;
+                
+                i++;
+            }
+
+            start++;
+        }
+
+        return win;
+    }
+
+    private void print() {
         // top of board
         for (int c = 0; c < COLS; c++) {
             if (c == 0) outStream.print("╔");
