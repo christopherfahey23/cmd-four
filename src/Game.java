@@ -36,8 +36,10 @@ public class Game {
                 // here for now
                 if (!gameOver) print();
             } else {
-                //computerTakesTurn();
+                computerTakesTurn();
                 userToPlay = true;
+
+                if (!gameOver) print();
             }
             // check for win
             // if (!gameOver)
@@ -78,8 +80,14 @@ public class Game {
                 }
             }
         }
-        
-        
+    }
+
+
+    private void computerTakesTurn() {
+        //temporary random move generator
+        int randCol = (int) ((Math.random() * 6) + 1);
+        System.out.println("Computer dropping piece in col " + randCol);
+        if(!dropPiece(randCol - 1, Player.COMPUTER)) computerTakesTurn();
     }
 
     private boolean dropPiece(int col, Player player) {

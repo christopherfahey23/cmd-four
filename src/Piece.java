@@ -10,6 +10,5 @@ public class Piece {
     public String print() {
         if (player == Player.USER) return "●";
         else return "◯";
-        
     }
 }
