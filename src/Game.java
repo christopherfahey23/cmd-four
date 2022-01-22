@@ -63,16 +63,16 @@ public class Game {
             String cmd = userInput.nextLine();
 
             try {
-                col = Integer.parseInt(cmd);
-                if (col >= 1 && col <= 7) {
-                    row = dropPiece(col - 1, Player.USER);
+                col = Integer.parseInt(cmd) - 1;
+                if (col >= 0 && col <= 6) {
+                    row = dropPiece(col, Player.USER);
 
                     if (row == -1) {
                         outStream.println("Invalid move. Please try again.");
                     } else {
                         validInput = true;
                         outStream.println("User places piece in column " 
-                            + col + ".");
+                            + (col + 1) + ".");
                     }
                 } else {
                     throw new RuntimeException();
@@ -89,7 +89,7 @@ public class Game {
     private Position computerTakesTurn() {
         //temporary random move generator
         int randCol = (int) (Math.random() * 6);
-        System.out.println("Computer dropping piece in col " + randCol);
+        System.out.println("Computer places piece in column " + (randCol + 1) + ".");
 
         int row = dropPiece(randCol, Player.COMPUTER);
 
@@ -125,7 +125,7 @@ public class Game {
         boolean win = false;
 
         int start = row - 3 >= 0 ? row - 3 : 0; 
-        while (!win && start <= ROWS - 3) {
+        while (!win && start <= ROWS - 4) {
             
             boolean winPossible = true; 
             int i = 0;
@@ -150,7 +150,7 @@ public class Game {
         boolean win = false;
 
         int start = col - 3 >= 0 ? col - 3 : 0; 
-        while (!win && start <= COLS - 3) {
+        while (!win && start <= COLS - 4) {
             
             boolean winPossible = true; 
             int i = 0;
