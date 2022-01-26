@@ -89,12 +89,14 @@ public class Game {
     private Position computerTakesTurn() {
         //temporary random move generator
         int randCol = (int) (Math.random() * 6);
-        System.out.println("Computer places piece in column " + (randCol + 1) + ".");
 
         int row = dropPiece(randCol, Player.COMPUTER);
 
         if(row == -1) return computerTakesTurn();
-        else return new Position(row, randCol);
+        else {
+            outStream.println("Computer places piece in column " + (randCol + 1) + ".");
+            return new Position(row, randCol);
+        }
     }
 
     // Attempts to drop piece belonging to player in column col. 
@@ -116,8 +118,13 @@ public class Game {
     }
 
     // Checks if player has won after placing piece in row and col
+    // TODO: pass board as parameter so that AI can check possible 
+    // board states for win
     private boolean checkWin(Player player, int row, int col) {
-        return (checkColWin(player, row, col) || checkRowWin(player, row, col));
+        return (checkColWin(player, row, col) 
+            || checkRowWin(player, row, col)
+            || checkLRDiagonalWin(player, row, col) 
+            || checkRLDiagonalWin(player, row, col));
     }
 
     // Checks if player has won by making a column of four in col 
@@ -130,7 +137,7 @@ public class Game {
             boolean winPossible = true; 
             int i = 0;
 
-            while (winPossible && i < 4) {
+            while (winPossible && i < 4 && start + i < ROWS) {
                 Piece curr = board[start + i][col];
 
                 if (curr == null || curr.getPlayer() != player) winPossible = false;
@@ -155,7 +162,7 @@ public class Game {
             boolean winPossible = true; 
             int i = 0;
 
-            while (winPossible && i < 4) {
+            while (winPossible && i < 4 && start + i < COLS) {
                 Piece curr = board[row][start + i];
 
                 if (curr == null || curr.getPlayer() != player) winPossible = false;
@@ -165,6 +172,60 @@ public class Game {
             }
 
             start++;
+        }
+
+        return win;
+    }
+
+    // looks for a diagonal win from bottom left to upper right
+    private boolean checkLRDiagonalWin(Player player, int row, int col) {
+        boolean win = false;
+        
+        int r = row;
+        int c = col;
+
+        while (r >= 0 && c < COLS && r > row - 4 && c < col + 4) {
+            boolean winPossible = true;
+            int i = 0;
+
+            while (winPossible && r + i < ROWS && c - i >= 0) {
+                Piece curr = board[r + i][c - i];
+
+                if (curr == null || curr.getPlayer() != player) winPossible = false;
+                else if (i == 3) win = true;
+                
+                i++;
+            }
+
+            r--;
+            c++;
+        }
+
+        return win;
+    }
+
+    // looks for a diagonal win from bottom right to upper left
+    private boolean checkRLDiagonalWin(Player player, int row, int col) {
+        boolean win = false;
+        
+        int r = row;
+        int c = col;
+
+        while (r >= 0 && c >= 0 && r > row - 4 && c > col - 4) {
+            boolean winPossible = true;
+            int i = 0;
+
+            while (winPossible && r + i < ROWS && c + i < COLS) {
+                Piece curr = board[r + i][c + i];
+
+                if (curr == null || curr.getPlayer() != player) winPossible = false;
+                else if (i == 3) win = true;
+                
+                i++;
+            }
+
+            r--;
+            c--;
         }
 
         return win;
