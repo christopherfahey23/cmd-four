@@ -99,6 +99,9 @@ public class Game {
         }
     }
 
+    // TODO: create board class and move the following functions there. 
+    // Use board objects to test different secnarios with AI.
+
     // Attempts to drop piece belonging to player in column col. 
     // Returns -1 if move is invalid and the row the piece lands in otherwise.
     private int dropPiece(int col, Player player) {
@@ -123,7 +126,7 @@ public class Game {
     private boolean checkWin(Player player, int row, int col) {
         return (findRowGroups(player, 4) > 0 
             || findColGroups(player, 4) > 0
-            || checkFourDiag(player));
+            || findDiagGroups(player, 4) > 0);
     }
 
     // Finds rows of 4 of player's tokens as well as groups of 
@@ -178,37 +181,50 @@ public class Game {
         return groups;
     }
 
-    private boolean checkFourDiag(Player player) {
+    private int findDiagGroups(Player player, int size) {
+        int groups = 0;
+        
         // upper left to lower right diagonal
         for (int r = 0; r < ROWS - 3; r++) {
             for (int c = 0; c < COLS - 3; c++) {
+                int playerCount = 0;
+                int oppCount = 0;
+
                 for (int i = 0; i < 4; i++) {
                     Piece curr = board[r + i][c + i];
-                    if (curr == null || curr.getPlayer() != player) {
-                        break;
-                    } else if (i == 3) {
-                        return true;
+
+                    if (curr != null) {
+                        if (curr.getPlayer() == player) playerCount++;
+                        else oppCount++;
                     }
                 }
+
+                if (playerCount == size && oppCount == 0) groups++;
             }
         }
         
         // lower left to upper right diagonal
         for (int r = 0; r < ROWS - 3; r++) {
             for (int c = 3; c < COLS; c++) {
+                int playerCount = 0;
+                int oppCount = 0;
+
                 for (int i = 0; i < 4; i++) {
                     Piece curr = board[r + i][c - i];
-                    if (curr == null || curr.getPlayer() != player) {
-                        break;
-                    } else if (i == 3) {
-                        return true;
+                    
+                    if (curr != null) {
+                        if (curr.getPlayer() == player) playerCount++;
+                        else oppCount++;
                     }
                 }
+
+                if (playerCount == size && oppCount == 0) groups++;
             }
         }
-        return false;
+        return groups;
     }
 
+    // prints the board to outStream
     private void print() {
         // top of board
         for (int c = 0; c < COLS; c++) {
