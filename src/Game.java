@@ -121,45 +121,61 @@ public class Game {
     // TODO: pass board as parameter so that AI can check possible 
     // board states for win
     private boolean checkWin(Player player, int row, int col) {
-        return (checkFourRow(player) 
-            || checkFourCol(player)
+        return (findRowGroups(player, 4) > 0 
+            || findColGroups(player, 4) > 0
             || checkFourDiag(player));
     }
 
-    // check board for four of player's tokens in a row
-    private boolean checkFourRow(Player player) {
+    // Finds rows of 4 of player's tokens as well as groups of 
+    // 1, 2, or 3 that can be connected into a row of 4. 
+    private int findRowGroups(Player player, int size) {
+        int groups = 0;
+        
         for (int r = 0; r < ROWS; r++) {
             for (int c = 0; c < COLS - 3; c++) {
+                int playerCount = 0;
+                int oppCount = 0;
+                
                 for (int i = 0; i < 4; i++) {
                     Piece curr = board[r][c + i];
-                    if (curr == null || curr.getPlayer() != player) {
-                        break;
-                    } else if (i == 3) {
-                        return true;
+
+                    if (curr != null) {
+                        if (curr.getPlayer() == player) playerCount++;
+                        else oppCount++;
                     }
                 }
+
+                if (playerCount == size && oppCount == 0) groups++; 
             }
         }
 
-        return false;
+        return groups;
     }
 
-    // check board for four of player's tokens in a column
-    private boolean checkFourCol(Player player) {
+    // Finds columns of 4 of player's tokens as well as groups of 
+    // 1, 2, or 3 that can be connected into a column of 4. 
+    private int findColGroups(Player player, int size) {
+        int groups = 0;
+        
         for (int c = 0; c < COLS; c++) {
             for (int r = 0; r < ROWS - 3; r++) {
+                int playerCount = 0;
+                int oppCount = 0;
+                
                 for (int i = 0; i < 4; i++) {
                     Piece curr = board[r + i][c];
-                    if (curr == null || curr.getPlayer() != player) {
-                        break;
-                    } else if (i == 3) {
-                        return true;
+
+                    if (curr != null) {
+                        if (curr.getPlayer() == player) playerCount++;
+                        else oppCount++;
                     }
                 }
+
+                if (playerCount == size && oppCount == 0) groups++; 
             }
         }
 
-        return false;
+        return groups;
     }
 
     private boolean checkFourDiag(Player player) {
