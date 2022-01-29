@@ -123,8 +123,7 @@ public class Game {
     private boolean checkWin(Player player, int row, int col) {
         return (checkFourRow(player) 
             || checkFourCol(player)
-            || checkLRDiagonalWin(player, row, col) 
-            || checkRLDiagonalWin(player, row, col));
+            || checkFourDiag(player));
     }
 
     // check board for four of player's tokens in a row
@@ -163,58 +162,35 @@ public class Game {
         return false;
     }
 
-    // looks for a diagonal win from bottom left to upper right
-    private boolean checkLRDiagonalWin(Player player, int row, int col) {
-        boolean win = false;
-        
-        int r = row;
-        int c = col;
-
-        while (r >= 0 && c < COLS && r > row - 4 && c < col + 4) {
-            boolean winPossible = true;
-            int i = 0;
-
-            while (winPossible && r + i < ROWS && c - i >= 0) {
-                Piece curr = board[r + i][c - i];
-
-                if (curr == null || curr.getPlayer() != player) winPossible = false;
-                else if (i == 3) win = true;
-                
-                i++;
+    private boolean checkFourDiag(Player player) {
+        // upper left to lower right diagonal
+        for (int r = 0; r < ROWS - 3; r++) {
+            for (int c = 0; c < COLS - 3; c++) {
+                for (int i = 0; i < 4; i++) {
+                    Piece curr = board[r + i][c + i];
+                    if (curr == null || curr.getPlayer() != player) {
+                        break;
+                    } else if (i == 3) {
+                        return true;
+                    }
+                }
             }
-
-            r--;
-            c++;
         }
-
-        return win;
-    }
-
-    // looks for a diagonal win from bottom right to upper left
-    private boolean checkRLDiagonalWin(Player player, int row, int col) {
-        boolean win = false;
         
-        int r = row;
-        int c = col;
-
-        while (r >= 0 && c >= 0 && r > row - 4 && c > col - 4) {
-            boolean winPossible = true;
-            int i = 0;
-
-            while (winPossible && r + i < ROWS && c + i < COLS) {
-                Piece curr = board[r + i][c + i];
-
-                if (curr == null || curr.getPlayer() != player) winPossible = false;
-                else if (i == 3) win = true;
-                
-                i++;
+        // lower left to upper right diagonal
+        for (int r = 0; r < ROWS - 3; r++) {
+            for (int c = 3; c < COLS; c++) {
+                for (int i = 0; i < 4; i++) {
+                    Piece curr = board[r + i][c - i];
+                    if (curr == null || curr.getPlayer() != player) {
+                        break;
+                    } else if (i == 3) {
+                        return true;
+                    }
+                }
             }
-
-            r--;
-            c--;
         }
-
-        return win;
+        return false;
     }
 
     private void print() {
