@@ -122,10 +122,29 @@ public class Game {
     // board states for win
     private boolean checkWin(Player player, int row, int col) {
         return (checkColWin(player, row, col) 
-            || checkRowWin(player, row, col)
+            || checkFourRow(player)
             || checkLRDiagonalWin(player, row, col) 
             || checkRLDiagonalWin(player, row, col));
     }
+
+    private boolean checkFourRow(Player player) {
+        for (int r = 0; r < ROWS; r++) {
+            for (int c = 0; c < COLS - 4; c++) {
+                for (int i = 0; i < 4; i++) {
+                    Piece curr = board[r][c + i];
+                    if (curr == null || curr.getPlayer() != player) {
+                        break;
+                    } else if (i == 3) {
+                        return true;
+                    }
+                }
+            }
+        }
+
+        return false;
+    }
+
+
 
     // Checks if player has won by making a column of four in col 
     private boolean checkColWin(Player player, int row, int col) {
@@ -139,31 +158,6 @@ public class Game {
 
             while (winPossible && i < 4 && start + i < ROWS) {
                 Piece curr = board[start + i][col];
-
-                if (curr == null || curr.getPlayer() != player) winPossible = false;
-                else if (i == 3) win = true;
-                
-                i++;
-            }
-
-            start++;
-        }
-
-        return win;
-    }
-
-    // Checks if player has won by making a row of four in row 
-    private boolean checkRowWin(Player player, int row, int col) {
-        boolean win = false;
-
-        int start = col - 3 >= 0 ? col - 3 : 0; 
-        while (!win && start <= COLS - 4) {
-            
-            boolean winPossible = true; 
-            int i = 0;
-
-            while (winPossible && i < 4 && start + i < COLS) {
-                Piece curr = board[row][start + i];
 
                 if (curr == null || curr.getPlayer() != player) winPossible = false;
                 else if (i == 3) win = true;
