@@ -121,15 +121,16 @@ public class Game {
     // TODO: pass board as parameter so that AI can check possible 
     // board states for win
     private boolean checkWin(Player player, int row, int col) {
-        return (checkColWin(player, row, col) 
-            || checkFourRow(player)
+        return (checkFourRow(player) 
+            || checkFourCol(player)
             || checkLRDiagonalWin(player, row, col) 
             || checkRLDiagonalWin(player, row, col));
     }
 
+    // check board for four of player's tokens in a row
     private boolean checkFourRow(Player player) {
         for (int r = 0; r < ROWS; r++) {
-            for (int c = 0; c < COLS - 4; c++) {
+            for (int c = 0; c < COLS - 3; c++) {
                 for (int i = 0; i < 4; i++) {
                     Piece curr = board[r][c + i];
                     if (curr == null || curr.getPlayer() != player) {
@@ -144,31 +145,22 @@ public class Game {
         return false;
     }
 
-
-
-    // Checks if player has won by making a column of four in col 
-    private boolean checkColWin(Player player, int row, int col) {
-        boolean win = false;
-
-        int start = row - 3 >= 0 ? row - 3 : 0; 
-        while (!win && start <= ROWS - 4) {
-            
-            boolean winPossible = true; 
-            int i = 0;
-
-            while (winPossible && i < 4 && start + i < ROWS) {
-                Piece curr = board[start + i][col];
-
-                if (curr == null || curr.getPlayer() != player) winPossible = false;
-                else if (i == 3) win = true;
-                
-                i++;
+    // check board for four of player's tokens in a column
+    private boolean checkFourCol(Player player) {
+        for (int c = 0; c < COLS; c++) {
+            for (int r = 0; r < ROWS - 3; r++) {
+                for (int i = 0; i < 4; i++) {
+                    Piece curr = board[r + i][c];
+                    if (curr == null || curr.getPlayer() != player) {
+                        break;
+                    } else if (i == 3) {
+                        return true;
+                    }
+                }
             }
-
-            start++;
         }
 
-        return win;
+        return false;
     }
 
     // looks for a diagonal win from bottom left to upper right
