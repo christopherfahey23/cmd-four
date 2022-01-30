@@ -21,6 +21,10 @@ public class Game {
 
         gameOver = false;
         userToPlay = true;
+
+        printStream.println();
+        printStream.println("Welcome to COMMAND-4!");
+        gameBoard.print();
         handleTurn();
     }
 
@@ -87,7 +91,7 @@ public class Game {
 
     // Generates computer's move.
     private void computerTakesTurn() {
-        int maxScore = 0;
+        int maxScore = Integer.MIN_VALUE;
         int maxMove = 0;
 
         for (int c = 0; c < Board.COLS; c++) {
@@ -99,11 +103,12 @@ public class Game {
             } else {
                 int twosScore = testBoard.findTwos(Player.COMPUTER) 
                     - testBoard.findTwos(Player.USER);
-                int threesScore = testBoard.findThrees(Player.COMPUTER) 
-                    - testBoard.findThrees(Player.USER);
+                int compThreesScore = testBoard.findThrees(Player.COMPUTER);
+                int userThreesScore = testBoard.findThrees(Player.USER);
                 int foursScore = testBoard.findFours(Player.COMPUTER);
 
-                moveScore = 1 * twosScore + 1000 * threesScore + 1000000 * foursScore;
+                moveScore = 1 * twosScore + 50 * compThreesScore 
+                    - 100000 * userThreesScore + 100000000 * foursScore;
             }
 
             if (moveScore > maxScore) {
@@ -117,7 +122,7 @@ public class Game {
         printStream.println("Computer places piece in column " + (maxMove + 1) + ".");
     }
 
-    // Handles end of game
+    // Handles end of game.
     private void endGame(Player player) {
         gameOver = true;
 

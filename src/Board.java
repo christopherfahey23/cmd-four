@@ -80,7 +80,7 @@ public class Board {
     // that can be connected into rows. 
     private int findRowGroups(Player player, int size) {
         int groups = 0;
-        
+
         for (int r = 0; r < ROWS; r++) {
             for (int c = 0; c < COLS - 3; c++) {
                 int playerCount = 0;
@@ -98,7 +98,7 @@ public class Board {
                 if (playerCount == size && oppCount == 0) groups++; 
             }
         }
-
+        
         return groups;
     }
 
