@@ -1,8 +1,8 @@
 import java.io.PrintStream;
 
 public class Board {
-    private static final int ROWS = 6;
-    private static final int COLS = 7;
+    public static final int ROWS = 6;
+    public static final int COLS = 7;
 
     private Piece[][] board = new Piece[ROWS][COLS];
 
@@ -10,6 +10,23 @@ public class Board {
     
     public Board(PrintStream printStream) {
         this.printStream = printStream;
+    }
+
+    // Copy constructor
+    public Board(Board other) {
+        this.printStream = other.printStream;
+        
+        for (int c = 0; c < COLS; c++) {
+            for (int r = 0; r < ROWS; r++) {
+                if (other.board[r][c] != null) {
+                    if (other.board[r][c].getPlayer() == Player.USER) {
+                        board[r][c] = new Piece(Player.USER);
+                    } else {
+                        board[r][c] = new Piece(Player.COMPUTER);
+                    }
+                }
+            }
+        }
     }
 
     // Returns true if the board is full and false otherwise.

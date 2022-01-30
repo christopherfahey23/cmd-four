@@ -32,9 +32,9 @@ public class Game {
             if (userToPlay == true) {
                 userTakesTurn();
                 userToPlay = false;
-                gameBoard.print();
 
                 if (gameBoard.findFours(Player.USER) > 0) {
+                    gameBoard.print();
                     endGame(Player.USER);
                 }
             } else {
@@ -59,6 +59,8 @@ public class Game {
         boolean validInput = false;
 
         while (!validInput) {
+            printStream.println();
+            printStream.print("Select a column: ");
             String cmd = userInput.nextLine();
 
             try {
@@ -70,7 +72,8 @@ public class Game {
                         printStream.println("Invalid move. Please try again.");
                     } else {
                         validInput = true;
-                        printStream.println("User places piece in column " 
+                        printStream.println();
+                        printStream.println("User places a piece in column " 
                             + (col + 1) + ".");
                     }
                 } else {
@@ -84,24 +87,43 @@ public class Game {
 
     // Generates computer's move.
     private void computerTakesTurn() {
-        //temporary random move generator
-        int randCol = (int) (Math.random() * 6);
+        int maxScore = 0;
+        int maxMove = 0;
 
-        int row = gameBoard.dropPiece(randCol, Player.COMPUTER);
+        for (int c = 0; c < Board.COLS; c++) {
+            Board testBoard = new Board(gameBoard);
+            int moveScore = 0;
 
-        if(row == -1) {
-            computerTakesTurn();
-        } else {
-            printStream.println("Computer places piece in column " + (randCol + 1) + ".");
+            if (testBoard.dropPiece(c, Player.COMPUTER) == -1) {
+                moveScore = Integer.MIN_VALUE;
+            } else {
+                int twosScore = testBoard.findTwos(Player.COMPUTER) 
+                    - testBoard.findTwos(Player.USER);
+                int threesScore = testBoard.findThrees(Player.COMPUTER) 
+                    - testBoard.findThrees(Player.USER);
+                int foursScore = testBoard.findFours(Player.COMPUTER);
+
+                moveScore = 1 * twosScore + 1000 * threesScore + 1000000 * foursScore;
+            }
+
+            if (moveScore > maxScore) {
+                maxScore = moveScore;
+                maxMove = c;
+            }
         }
+
+        gameBoard.dropPiece(maxMove, Player.COMPUTER);
+
+        printStream.println("Computer places piece in column " + (maxMove + 1) + ".");
     }
 
     // Handles end of game
     private void endGame(Player player) {
         gameOver = true;
 
+        printStream.println();
         if (player != null) {
-            printStream.print("Winner: "); 
+            printStream.print("WINNER: "); 
             if (player == Player.USER) printStream.println("Player");
             else printStream.println("Computer");
         } else {
