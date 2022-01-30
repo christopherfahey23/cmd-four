@@ -12,6 +12,17 @@ public class Board {
         this.printStream = printStream;
     }
 
+    // Returns true if the board is full and false otherwise.
+    public boolean isFull() {
+        for (int r = 0; r < ROWS; r++) {
+            for (int c = 0; c < COLS; c++) {
+                if (board[r][c] == null) return false;
+            }
+        }
+
+        return true;
+    }
+
     // Attempts to drop piece belonging to player in column col. 
     // Returns -1 if move is invalid and the row the piece lands in otherwise.
     public int dropPiece(int col, Player player) {

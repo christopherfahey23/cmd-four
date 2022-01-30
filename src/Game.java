@@ -8,8 +8,8 @@ public class Game {
     private InputStream inStream;
     private Scanner userInput;
 
-    private boolean gameOver;
     private boolean userToPlay;
+    private boolean gameOver;
 
     private Board gameBoard;
 
@@ -24,6 +24,7 @@ public class Game {
         handleTurn();
     }
 
+    // Handles turn taking
     private void handleTurn() {
         userInput = new Scanner(inStream);
 
@@ -31,20 +32,24 @@ public class Game {
             if (userToPlay == true) {
                 userTakesTurn();
                 userToPlay = false;
+                gameBoard.print();
 
-                gameOver = gameBoard.findFours(Player.USER) > 0;
+                if (gameBoard.findFours(Player.USER) > 0) {
+                    endGame(Player.USER);
+                }
             } else {
                 computerTakesTurn();
                 userToPlay = true;
+                gameBoard.print();
 
-                gameOver = gameBoard.findFours(Player.COMPUTER) > 0;
+                if (gameBoard.findFours(Player.COMPUTER) > 0) {
+                    endGame(Player.COMPUTER);
+                }
             }
-            gameBoard.print();
-            // TODO: check for draw. Ensure no turn is taken when board is full.
+            
+            if (!gameOver && gameBoard.isFull()) endGame(null);
         }
-        // TODO: if gameOver, print gameover screen with final board 
-        if (gameOver) printStream.println("Thanks for playing!");
-
+        
         userInput.close();
     }
 
@@ -77,7 +82,7 @@ public class Game {
         }
     }
 
-    // Generates computer's move and returns as Position.
+    // Generates computer's move.
     private void computerTakesTurn() {
         //temporary random move generator
         int randCol = (int) (Math.random() * 6);
@@ -89,6 +94,22 @@ public class Game {
         } else {
             printStream.println("Computer places piece in column " + (randCol + 1) + ".");
         }
+    }
+
+    // Handles end of game
+    private void endGame(Player player) {
+        gameOver = true;
+
+        if (player != null) {
+            printStream.print("Winner: "); 
+            if (player == Player.USER) printStream.println("Player");
+            else printStream.println("Computer");
+        } else {
+            printStream.print("It's a draw!");
+        }
+        
+        printStream.println();
+        printStream.println("Thanks for playing!");
     }
 }
 
