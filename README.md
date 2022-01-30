@@ -15,6 +15,7 @@ It assigns a score to each move as follows:
 - -100000 points per user group of 3 (allowing this would result in a win for 
 the user on the next turn)
 - 100000000 points per computer group of 4 (win)
+
 It plays the move with the maximum total score. (Inspired by https://www.kaggle.com/alexisbcook/one-step-lookahead.)
 
 Though the AI could be improved if it looked more than one turn ahead, 
