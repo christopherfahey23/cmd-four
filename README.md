@@ -1,5 +1,8 @@
 # Command-4
 
+## To Run
+From `bin`, run `java CmdFour`.
+
 ## Gameplay
 Make rows, columns, or diagonal groups of four by dropping pieces into 
 the columns. Play against the computer.
