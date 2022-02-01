@@ -9,17 +9,10 @@ the columns. Play against the computer.
 
 ## The Algorithm
 The computer looks one move ahead. For each possible move, it 
-scans the board for groups of 2 and 3 that can be connected 
+scans the resulting board for groups of 2 and 3 that can be connected 
 into winning groups of four (as well as groups of 4). 
-It assigns a score to each move as follows:
-- 1 point per group of 2 made by computer
-- -1 point per group of 2 made by user
-- 50 points per computer group of 3
-- -100000 points per user group of 3 (allowing this would result in a win for 
-the user on the next turn)
-- 100000000 points per computer group of 4 (win)
-
-It plays the move with the maximum total score. (Inspired by https://www.kaggle.com/alexisbcook/one-step-lookahead.)
+It assigns a score to each possible board and plays the move that 
+produces the highest-scoring board. (Inspired by https://www.kaggle.com/alexisbcook/one-step-lookahead.)
 
 Though the AI could be improved if it looked more than one turn ahead, 
 I have not yet been able to beat it. 
