@@ -1,4 +1,4 @@
-# Command-4
+# Command-Four
 
 ## To Run
 From `bin`, run `java CmdFour`.
