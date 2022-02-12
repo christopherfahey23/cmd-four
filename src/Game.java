@@ -23,7 +23,7 @@ public class Game {
         userToPlay = true;
 
         printStream.println();
-        printStream.println("Welcome to COMMAND-4!");
+        printStream.println("Welcome to Command Four!");
         gameBoard.print();
         handleTurn();
     }
@@ -119,7 +119,7 @@ public class Game {
 
         gameBoard.dropPiece(maxMove, Player.COMPUTER);
 
-        printStream.println("Computer places piece in column " + (maxMove + 1) + ".");
+        printStream.println("Computer places a piece in column " + (maxMove + 1) + ".");
     }
 
     // Handles end of game.
