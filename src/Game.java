@@ -23,7 +23,7 @@ public class Game {
         userToPlay = true;
 
         printStream.println();
-        printStream.println("Welcome to Command Four!");
+        printStream.println("Welcome to Four in a Row!");
         gameBoard.print();
         handleTurn();
     }
