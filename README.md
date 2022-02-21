@@ -1,7 +1,7 @@
 # Four in a Row
 
 ## To Run
-From `bin`, run `java Four`
+From `bin`, run `java Four`.
 
 ## Gameplay
 Make rows, columns, or diagonal groups of four by dropping pieces into 
